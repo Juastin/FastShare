@@ -97,23 +97,17 @@ def make_folder_if_not_exists(current_user=UserInDB):
 @app.on_event("startup")
 @repeat_every(seconds=60)  # 1 hour
 def check_expired_files() -> None:
-    print("Hello world")
-    # print(os.path.abspath("user_files/"))
-
     for path, subdirs, files in os.walk(os.path.abspath("user_files/")):
         for name in files:
             remove_if_expired(os.path.join(path, name))
 
+def remove_if_expired(file_path) -> None:
+    # TODO: Change this to work on ubuntu
+    creation_time = os.path.getctime(file_path)
+    dt_creation = datetime.fromtimestamp(creation_time)
 
-    # onlyfiles = [f for f in os.listdir("user_files/") if os.path.isfile(os.path.join("user_files/", f))]
-    # print(onlyfiles)
-    # for file in onlyfiles:
-    #     os.remove(file)
-    #     # print(file)
-    #     # print(os.path.getctime(file))
-        
-def remove_if_expired(file_path):
-    print(os.path.getctime(file_path))
+    if datetime.now() - dt_creation > timedelta(minutes=10):
+        os.remove(file_path)
 
 @app.get("/")
 def read_root():
