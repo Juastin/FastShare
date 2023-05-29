@@ -127,7 +127,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/users/create/")
-async def register_user(user: User):
+async def register_user(register_token: str, user: User):
+    if (register_token.lower() != os.getenv("REGISTER_TOKEN")):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Register token incorrect")
     hashpw = get_password_hash(user.password)
     validate_password(user.password)
     db.create_user(username=user.username, password=hashpw)
