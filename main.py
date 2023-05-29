@@ -1,7 +1,10 @@
 import os
 from datetime import datetime, timedelta
-from fastapi import Depends, FastAPI, HTTPException, status, Form
+from typing import Annotated
+import aiofiles
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi_utils.tasks import repeat_every
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
@@ -41,7 +44,7 @@ def validate_password(password=str):
 def get_password_hash(password=str):
     return pwd_context.hash(password)
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -60,13 +63,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     return user
 
-def get_user_by_username(db, username=str):
+def get_user_by_username(db, username=str) -> UserInDB:
     user = db.get_user_by_username(username)
     if user != None:
-        print(user)
         return UserInDB(username=user[0], hashed_password=user[1], date_of_registration=user[2], amount_of_space=user[3])
     
-def authenticate_user(db, username=str, password=str):
+def authenticate_user(db, username=str, password=str) -> UserInDB:
     user = get_user_by_username(db, username)
     if not user or not verify_password(password, user.hashed_password):
         raise HTTPException(
@@ -86,6 +88,32 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
     return encoded_jwt
 
+def make_folder_if_not_exists(current_user=UserInDB):
+    if not os.path.isdir("user_files/"):
+        os.makedirs("user_files/")
+    if not os.path.isdir(f"user_files/{current_user.username}/"):
+            os.makedirs(f"user_files/{current_user.username}/")
+
+@app.on_event("startup")
+@repeat_every(seconds=60)  # 1 hour
+def check_expired_files() -> None:
+    print("Hello world")
+    # print(os.path.abspath("user_files/"))
+
+    for path, subdirs, files in os.walk(os.path.abspath("user_files/")):
+        for name in files:
+            remove_if_expired(os.path.join(path, name))
+
+
+    # onlyfiles = [f for f in os.listdir("user_files/") if os.path.isfile(os.path.join("user_files/", f))]
+    # print(onlyfiles)
+    # for file in onlyfiles:
+    #     os.remove(file)
+    #     # print(file)
+    #     # print(os.path.getctime(file))
+        
+def remove_if_expired(file_path):
+    print(os.path.getctime(file_path))
 
 @app.get("/")
 def read_root():
@@ -110,3 +138,16 @@ async def register_user(user: User):
 @app.get("/users/me/")
 async def read_own_items(current_user: User = Depends(get_current_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+@app.post("/uploadfile/")
+async def create_upload_file(in_file: UploadFile, current_user: User = Depends(get_current_user)):
+    if not in_file:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Object send is not a file.")
+    
+    make_folder_if_not_exists(current_user)
+    out_file_path = current_user.username+"/"+in_file.filename
+    async with aiofiles.open(out_file_path, 'wb') as out_file:
+        while content := await in_file.read(1024):  # async read chunk
+            await out_file.write(content)  # async write chunk
+
+        return {"Result": "OK"}
