@@ -95,7 +95,7 @@ def make_folder_if_not_exists(current_user=UserInDB):
             os.makedirs(f"user_files/{current_user.username}/")
 
 @app.on_event("startup")
-@repeat_every(seconds=60)  # 1 hour
+@repeat_every(seconds=60)
 def check_expired_files() -> None:
     for path, subdirs, files in os.walk(os.path.abspath("user_files/")):
         for name in files:
