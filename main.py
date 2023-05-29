@@ -4,6 +4,7 @@ from typing import Annotated
 import aiofiles
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import FileResponse
 from fastapi_utils.tasks import repeat_every
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -102,7 +103,6 @@ def check_expired_files() -> None:
     print(_user_files)
     for path, subdirs, files in os.walk(_user_files):
         for name in files:
-            print(os.path.join(path, name))
             remove_if_expired(os.path.join(path, name))
 
 def remove_if_expired(file_path) -> None:
@@ -133,11 +133,23 @@ async def register_user(user: User):
     db.create_user(username=user.username, password=hashpw)
     return {"Account created with username": user.username}
 
-@app.get("/users/me/")
-async def read_own_items(current_user: User = Depends(get_current_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+@app.get("/files/get_all_files/")
+async def get_all_files_of_user(current_user: User = Depends(get_current_user)):
+    user_files = []
+    for path, subdirs, files in os.walk(_user_files):
+        for name in files:
+            user_files.append(name)
 
-@app.post("/uploadfile/")
+    return {"files": user_files}
+
+@app.get("/files/get_file", response_class=FileResponse)
+async def get_file_by_name(filename: str, current_user: User = Depends(get_current_user)):
+    if os.path.exists(_user_files+current_user.username+"/"+filename) == False:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "File does not exists")
+    else:
+        return _user_files+current_user.username+"/"+filename
+
+@app.post("/files/upload_file/")
 async def create_upload_file(in_file: UploadFile, current_user: User = Depends(get_current_user)):
     if not in_file:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Object send is not a file.")
