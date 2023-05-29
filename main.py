@@ -13,6 +13,8 @@ from database import Database
 app = FastAPI()
 db = Database()
 
+_user_files = os.getcwd()+"/user_files/"
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -89,16 +91,18 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 def make_folder_if_not_exists(current_user=UserInDB):
-    if not os.path.isdir("user_files/"):
-        os.makedirs("user_files/")
+    if not os.path.isdir(_user_files):
+        os.makedirs(_user_files)
     if not os.path.isdir(f"user_files/{current_user.username}/"):
             os.makedirs(f"user_files/{current_user.username}/")
 
 @app.on_event("startup")
 @repeat_every(seconds=60)
 def check_expired_files() -> None:
-    for path, subdirs, files in os.walk(os.path.abspath("user_files/")):
+    print(_user_files)
+    for path, subdirs, files in os.walk(_user_files):
         for name in files:
+            print(os.path.join(path, name))
             remove_if_expired(os.path.join(path, name))
 
 def remove_if_expired(file_path) -> None:
@@ -139,7 +143,7 @@ async def create_upload_file(in_file: UploadFile, current_user: User = Depends(g
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Object send is not a file.")
     
     make_folder_if_not_exists(current_user)
-    out_file_path = current_user.username+"/"+in_file.filename
+    out_file_path = _user_files+current_user.username+"/"+in_file.filename
     async with aiofiles.open(out_file_path, 'wb') as out_file:
         while content := await in_file.read(1024):  # async read chunk
             await out_file.write(content)  # async write chunk
