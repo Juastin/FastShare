@@ -111,6 +111,7 @@ def remove_if_expired(file_path) -> None:
     dt_creation = datetime.fromtimestamp(creation_time)
 
     if datetime.now() - dt_creation > timedelta(minutes=10):
+        db.change_amount_of_space(-os.stat(file_path).st_size, os.path.basename(os.path.dirname(file_path)))
         os.remove(file_path)
 
 @app.get("/")
@@ -136,7 +137,7 @@ async def register_user(register_token: str, user: User):
     return {"Account created with username": user.username}
 
 @app.get("/files/get_all_files/")
-async def get_all_files_of_user(current_user: User = Depends(get_current_user)):
+async def get_all_files_of_user(_: User = Depends(get_current_user)):
     user_files = []
     for path, subdirs, files in os.walk(_user_files):
         for name in files:
@@ -152,14 +153,19 @@ async def get_file_by_name(filename: str, current_user: User = Depends(get_curre
         return _user_files+current_user.username+"/"+filename
 
 @app.post("/files/upload_file/")
-async def create_upload_file(in_file: UploadFile, current_user: User = Depends(get_current_user)):
+async def create_upload_file(in_file: UploadFile, current_user: UserInDB = Depends(get_current_user)):
     if not in_file:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Object send is not a file.")
     
     make_folder_if_not_exists(current_user)
     out_file_path = _user_files+current_user.username+"/"+in_file.filename
     async with aiofiles.open(out_file_path, 'wb') as out_file:
+        total_size = 0
         while content := await in_file.read(1024):  # async read chunk
+            total_size += 1024
+            if(total_size >= (current_user.amount_of_space * (1024 * 1024))):
+                out_file.close()
+                raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "File is larger than your storage space, delete files or try compressing")
             await out_file.write(content)  # async write chunk
-
+        db.change_amount_of_space(total_size, current_user.username)
         return {"Result": "OK"}

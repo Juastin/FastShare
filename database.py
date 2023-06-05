@@ -36,11 +36,29 @@ class Database():
         self.con.close()
         return res
 
+    def get_user_amount_of_space(self, username=str):
+        self.connect()
+        self.cur.execute("SELECT amount_of_space FROM user WHERE username=? COLLATE NOCASE" , (username,))
+        res = self.cur.fetchone()
+        self.con.close()
+        return res
+
     def create_user(self, username=str, password=str):
         if self.check_user_exists(username): raise HTTPException(status.HTTP_400_BAD_REQUEST, "User already exists")
         self.connect()
         self.cur.execute("INSERT INTO user (username, password, date_of_registration, amount_of_space) VALUES (?, ?, ?, ?)", 
                                         (username, password, Database.get_time_stamp(), os.getenv("DEFAULT_AMOUNT_OF_SPACE"),))
+        self.con.commit()
+        self.con.close()
+        return True
+    
+    def change_amount_of_space(self, new_space=int, username=str):
+        # from bytes to megabytes.
+        new_space /= (1024 * 1024)
+        old_space = self.get_user_amount_of_space(username)[0]
+        space = round(old_space - new_space, 2)
+        self.connect()
+        self.cur.execute("UPDATE user SET amount_of_space=? WHERE username=? COLLATE NOCASE", (space, username))
         self.con.commit()
         self.con.close()
         return True
