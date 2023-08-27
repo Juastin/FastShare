@@ -4,6 +4,7 @@ from typing import Annotated
 import aiofiles
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi_utils.tasks import repeat_every
 from jose import JWTError, jwt
@@ -13,6 +14,18 @@ from database import Database
 
 app = FastAPI()
 db = Database()
+
+origins = [
+    "http://localhost:3000",  # Add other allowed origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _user_files = os.getcwd()+"/user_files/"
 
