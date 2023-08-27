@@ -5,11 +5,14 @@
     <title>FastShare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    
+    <link rel="stylesheet" href="css/style.css">   
     <link rel="manifest" href="manifest.json">
+    <script src="requestHandler.js"></script>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <button id="fetchButton" onclick="checkConnection()">Send Request</button>
+    <button id="loginButton" onclick="login()">Login</button>
+    <button id="getallfiles" onclick="getAllFiles()">Get all files</button>
 
     <script>
         if('serviceWorker' in navigator) {
