@@ -32,7 +32,7 @@ async function checkConnection() {
 async function login() {
     const formData = new URLSearchParams();
     formData.append("username", "Justin");
-    formData.append("password", "James10!");
+    formData.append("password", "...");
 
     const requestOptions = {
         method: "POST",
@@ -41,7 +41,6 @@ async function login() {
         },
         body: formData
     };
-    
     fetch(`${url}/token`, requestOptions)
         .then(response => {
             if (!response.ok) {
@@ -73,7 +72,26 @@ async function getAllFiles() {
         return response.json();
     })
     .then(data => {
-        console.log(data);
+        console.log(data.files);
+    });
+}
+async function uploadFile() { 
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${access_token}`
+        }
+    };
+    fetch(`${url}/files/upload_file/`, requestOptions)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.files);
     });
 }
 
