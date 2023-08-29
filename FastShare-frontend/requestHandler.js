@@ -32,7 +32,7 @@ async function checkConnection() {
 async function login() {
     const formData = new URLSearchParams();
     formData.append("username", "Justin");
-    formData.append("password", "...");
+    formData.append("password", "James10!");
 
     const requestOptions = {
         method: "POST",
@@ -50,6 +50,7 @@ async function login() {
         })
         .then(data => {
             access_token = data.access_token;
+            console.log(access_token);
         })
         .catch(error => {
             // Handle connection or request error here
@@ -73,16 +74,64 @@ async function getAllFiles() {
     })
     .then(data => {
         console.log(data.files);
+        let documents = document.getElementById('files');
+        
+        while (documents.firstChild) {
+            documents.removeChild(documents.firstChild);
+        }
+
+        data.files.forEach(file => {
+            documents.innerHTML += '<li>' + file + `<button onclick="downloadFile('${file}')">Download ${file}</button></li>`;;
+        });
     });
 }
-async function uploadFile() { 
+
+async function downloadFile(file_name) {
+    console.log("Downloading B)")
     const requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: {
-            "Content-Type": "multipart/form-data",
             "Authorization": `Bearer ${access_token}`
         }
     };
+    fetch(`${url}/files/get_file?filename=${file_name}`, requestOptions)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        var saveData = (function () {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            return function (data, fileName) {
+                var json = JSON.stringify(data),
+                    blob = new Blob([json], {type: "octet/stream"}),
+                    url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = fileName;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            };
+        }());
+        saveData(response.blob(), file_name);
+    });
+}
+
+async function uploadFile() { 
+    const fileInput = document.querySelector('#file-input') ;
+
+    const formData = new FormData();
+    formData.append("in_file", fileInput.files[0]);
+    // console.log(fileInput.files[0])
+
+    const requestOptions = {
+        method: "POST",
+        body: formData,
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    };
+    
     fetch(`${url}/files/upload_file/`, requestOptions)
     .then(response => {
         if (!response.ok) {

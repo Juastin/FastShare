@@ -13,7 +13,11 @@
     <button id="fetchButton" onclick="checkConnection()">Send Request</button>
     <button id="loginButton" onclick="login()">Login</button>
     <button id="getallfiles" onclick="getAllFiles()">Get all files</button>
-
+    <input  id="file-input" type="file" name="Choose file">
+    <button id="upload" onclick="uploadFile()">Upload</button>
+    <ul id="files">
+        <li>Here is where all the files will be</li>
+    </ul>
     <script>
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
