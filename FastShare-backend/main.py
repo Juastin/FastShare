@@ -128,6 +128,7 @@ def remove_if_expired(file_path) -> None:
         os.remove(file_path)
         if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
             os.rmdir(os.path.dirname(file_path))
+            # to reset complete storage space
 
 @app.get("/")
 def read_root():
@@ -167,6 +168,10 @@ async def get_file_by_name(filename: str, current_user: User = Depends(get_curre
     else:
         return _user_files+current_user.username+"/"+filename
 
+@app.get("/users/get_amount_of_space/")
+async def get_amount_of_space(current_user: User = Depends(get_current_user)):
+    return {"amount_of_space": db.get_amount_of_space_left(current_user.username)}
+
 @app.post("/files/upload_file/")
 async def create_upload_file(in_file: UploadFile, current_user: UserInDB = Depends(get_current_user)):
     if not in_file:
@@ -183,4 +188,4 @@ async def create_upload_file(in_file: UploadFile, current_user: UserInDB = Depen
                 raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "File is larger than your storage space, delete files or try compressing")
             await out_file.write(content)  # async write chunk
         db.change_amount_of_space(total_size, current_user.username)
-        return {"Result": "OK"}
+        return {"result": "OK", "amount_of_space": db.get_amount_of_space_left(current_user.username)}

@@ -55,18 +55,31 @@ class Database():
     def check_if_no_items(self, username=str):
         path = str(f"user_files/{username}/")
         if len(os.listdir(path)) == 0:
+            self.reset_amount_of_space(username)
             return True
         return False
+
+    def get_amount_of_space_left(self, username=str):
+        self.connect()
+        self.cur.execute("SELECT amount_of_space FROM user WHERE username=? COLLATE NOCASE", (username,))
+        res = self.cur.fetchone()
+        self.con.close()
+        return res[0]
 
     def change_amount_of_space(self, new_space=int, username=str):
         # from bytes to megabytes.
         new_space /= (1024 * 1024)
         old_space = self.get_user_amount_of_space(username)[0]
-        space = round(old_space - new_space, 2)
-        if self.check_if_no_items(username): space = os.getenv("DEFAULT_AMOUNT_OF_SPACE")
+        space = round(old_space - new_space, 4)
         self.connect()
-        self.cur.execute("UPDATE user SET amount_of_space=? WHERE username=? COLLATE NOCASE", (space, username))
+        self.cur.execute("UPDATE user SET amount_of_space=? WHERE username=? COLLATE NOCASE", (space, username,))
         self.con.commit()
         self.con.close()
         return True
     
+    def reset_amount_of_space(self, username=str):
+        self.connect()
+        self.cur.execute("UPDATE user SET amount_of_space=? WHERE username=? COLLATE NOCASE", (os.getenv("DEFAULT_AMOUNT_OF_SPACE"), username,))
+        self.con.commit()
+        self.con.close()
+        return True
