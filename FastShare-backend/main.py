@@ -123,7 +123,7 @@ def remove_if_expired(file_path) -> None:
     creation_time = os.path.getctime(file_path)
     dt_creation = datetime.fromtimestamp(creation_time)
 
-    if datetime.now() - dt_creation > timedelta(minutes=1):
+    if datetime.now() - dt_creation > timedelta(minutes=10):
         db.change_amount_of_space(-os.stat(file_path).st_size, os.path.basename(os.path.dirname(file_path)))
         os.remove(file_path)
         if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
