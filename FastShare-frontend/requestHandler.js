@@ -81,7 +81,7 @@ async function getAllFiles() {
         }
 
         data.files.forEach(file => {
-            documents.innerHTML += '<li>' + file + `<button onclick="downloadFile('${file}')">Download ${file}</button></li>`;;
+            documents.innerHTML += `<li><button onclick="downloadFile('${file}')">Download ${file}</button></li>`;
         });
     });
 }

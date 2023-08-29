@@ -52,6 +52,12 @@ class Database():
         self.con.close()
         return True
     
+    def check_if_no_items(self, username=str):
+        path = str(f"user_files/{username}/")
+        if len(os.listdir(path)) == 0:
+            return True
+        return False
+
     def change_amount_of_space(self, new_space=int, username=str):
         # from bytes to megabytes.
         new_space /= (1024 * 1024)

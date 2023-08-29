@@ -113,7 +113,7 @@ def make_folder_if_not_exists(current_user=UserInDB):
 @app.on_event("startup")
 @repeat_every(seconds=60)
 def check_expired_files() -> None:
-    print(_user_files)
+    print("Removing expired files")
     for path, subdirs, files in os.walk(_user_files):
         for name in files:
             remove_if_expired(os.path.join(path, name))
@@ -123,9 +123,11 @@ def remove_if_expired(file_path) -> None:
     creation_time = os.path.getctime(file_path)
     dt_creation = datetime.fromtimestamp(creation_time)
 
-    if datetime.now() - dt_creation > timedelta(minutes=10):
+    if datetime.now() - dt_creation > timedelta(minutes=1):
         db.change_amount_of_space(-os.stat(file_path).st_size, os.path.basename(os.path.dirname(file_path)))
         os.remove(file_path)
+        if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
+            os.rmdir(os.path.dirname(file_path))
 
 @app.get("/")
 def read_root():
