@@ -128,7 +128,6 @@ def remove_if_expired(file_path) -> None:
         os.remove(file_path)
         if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
             os.rmdir(os.path.dirname(file_path))
-            # to reset complete storage space
 
 @app.get("/")
 def read_root():
