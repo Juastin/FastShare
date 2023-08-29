@@ -63,6 +63,7 @@ class Database():
         new_space /= (1024 * 1024)
         old_space = self.get_user_amount_of_space(username)[0]
         space = round(old_space - new_space, 2)
+        if self.check_if_no_items(username): space = os.getenv("DEFAULT_AMOUNT_OF_SPACE")
         self.connect()
         self.cur.execute("UPDATE user SET amount_of_space=? WHERE username=? COLLATE NOCASE", (space, username))
         self.con.commit()
