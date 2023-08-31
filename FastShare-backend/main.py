@@ -122,12 +122,15 @@ def remove_if_expired(file_path) -> None:
     # TODO: Change this to work on ubuntu
     creation_time = os.path.getctime(file_path)
     dt_creation = datetime.fromtimestamp(creation_time)
+    if datetime.now() - dt_creation > timedelta(minutes=1):
+        remove_file(file_path)
 
-    if datetime.now() - dt_creation > timedelta(minutes=10):
-        db.change_amount_of_space(-os.stat(file_path).st_size, os.path.basename(os.path.dirname(file_path)))
-        os.remove(file_path)
-        if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
-            os.rmdir(os.path.dirname(file_path))
+def remove_file(file_path) -> None:
+    db.change_amount_of_space(-os.stat(file_path).st_size, os.path.basename(os.path.dirname(file_path)))
+    os.remove(file_path)
+    if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
+        os.rmdir(os.path.dirname(file_path))
+
 
 @app.get("/")
 def read_root():
@@ -188,3 +191,14 @@ async def create_upload_file(in_file: UploadFile, current_user: UserInDB = Depen
             await out_file.write(content)  # async write chunk
         db.change_amount_of_space(total_size, current_user.username)
         return {"result": "OK", "amount_of_space": db.get_amount_of_space_left(current_user.username)}
+    
+@app.delete("/files/delete_file/") 
+async def delete_file_by_name(filename: str, current_user: User = Depends(get_current_user)):
+    if filename == None:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "No filename provided")
+    if os.path.exists(_user_files+current_user.username+"/"+filename) == True:
+        remove_file(_user_files+current_user.username+"/"+filename)
+        return {"result": "OK", "amount_of_space": db.get_amount_of_space_left(current_user.username)}
+    else:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "File does not exists")
+        
