@@ -99,7 +99,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
     return encoded_jwt
@@ -122,7 +122,7 @@ def remove_if_expired(file_path) -> None:
     # TODO: Change this to work on ubuntu
     creation_time = os.path.getctime(file_path)
     dt_creation = datetime.fromtimestamp(creation_time)
-    if datetime.now() - dt_creation > timedelta(minutes=1):
+    if datetime.now() - dt_creation > timedelta(minutes=10):
         remove_file(file_path)
 
 def remove_file(file_path) -> None:
@@ -181,6 +181,16 @@ async def create_upload_file(in_file: UploadFile, current_user: UserInDB = Depen
     
     make_folder_if_not_exists(current_user)
     out_file_path = _user_files+current_user.username+"/"+in_file.filename
+
+    if os.path.exists(out_file_path):
+        counter = 1
+        while True:
+            new_file_path = out_file_path.split(".")[0] + f"_{counter}." + out_file_path.split(".")[1]
+            if not os.path.exists(new_file_path):
+                break
+            counter += 1
+        out_file_path = out_file_path.split(".")[0] + f"_{counter}." + out_file_path.split(".")[1]
+
     async with aiofiles.open(out_file_path, 'wb') as out_file:
         total_size = 0
         while content := await in_file.read(1024):  # async read chunk
