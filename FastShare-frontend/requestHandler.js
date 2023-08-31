@@ -73,7 +73,6 @@ async function getAllFiles() {
         return response.json();
     })
     .then(data => {
-        console.log(data.files);
         let documents = document.getElementById('files');
         
         while (documents.firstChild) {
@@ -81,39 +80,49 @@ async function getAllFiles() {
         }
 
         data.files.forEach(file => {
-            documents.innerHTML += `<li><button onclick="downloadFile('${file}')">Download ${file}</button></li>`;
+            documents.innerHTML += `<li><button onclick="downloadFile('${file}')">Download ${file}</button><button onclick="deleteFile('${file}')">Delete ${file}</button></li>`;
         });
     });
 }
 
 async function downloadFile(file_name) {
-    console.log("Downloading B)")
     const requestOptions = {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${access_token}`
         }
+    }
+    fetch(`${url}/files/get_file?filename=${file_name}`, requestOptions).then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const win_url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = win_url;
+        a.download = file_name;
+        a.click();
+        window.URL.revokeObjectURL(win_url);
+        a.remove();
+    });
+}
+
+async function deleteFile(file_name) {
+    const requestOptions = {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
     };
-    fetch(`${url}/files/get_file?filename=${file_name}`, requestOptions)
+    fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
     .then(response => {
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
-        var saveData = (function () {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function (data, fileName) {
-                var json = JSON.stringify(data),
-                    blob = new Blob([json], {type: "octet/stream"}),
-                    url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = fileName;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
-        }());
-        saveData(response.blob(), file_name);
+        getAllFiles();
     });
 }
 
