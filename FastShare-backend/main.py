@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timedelta
-from typing import Annotated
 import aiofiles
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
