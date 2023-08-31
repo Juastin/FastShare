@@ -110,14 +110,6 @@ def make_folder_if_not_exists(current_user=UserInDB):
     if not os.path.isdir(f"user_files/{current_user.username}/"):
             os.makedirs(f"user_files/{current_user.username}/")
 
-@app.on_event("startup")
-@repeat_every(seconds=60)
-def check_expired_files() -> None:
-    print("Removing expired files")
-    for path, subdirs, files in os.walk(_user_files):
-        for name in files:
-            remove_if_expired(os.path.join(path, name))
-
 def remove_if_expired(file_path) -> None:
     # TODO: Change this to work on ubuntu
     creation_time = os.path.getctime(file_path)
@@ -131,6 +123,14 @@ def remove_file(file_path) -> None:
     if db.check_if_no_items(os.path.basename(os.path.dirname(file_path))):
         os.rmdir(os.path.dirname(file_path))
 
+
+@app.on_event("startup")
+@repeat_every(seconds=60)
+def check_expired_files() -> None:
+    print("Removing expired files")
+    for path, subdirs, files in os.walk(_user_files):
+        for name in files:
+            remove_if_expired(os.path.join(path, name))
 
 @app.get("/")
 def read_root():
