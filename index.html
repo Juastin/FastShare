@@ -10,14 +10,23 @@
     <script src="requestHandler.js"></script>
 </head>
 <body>
-    <button id="fetchButton" onclick="checkConnection()">Send Request</button>
+    <nav class="sidenav">
+        <img src="icons/no-background.png" alt="FastShare logo">
+        <ul class="nav-links">
+            <li><a href="./index.html">Files</a></li>
+            <li><a href="./compressor.html">Compress videos</a></li>
+            <li><a href="./account.html">Account</a></li>
+        </div>
+    </nav>
+
+    <!-- <button id="fetchButton" onclick="checkConnection()">Send Request</button>
     <button id="loginButton" onclick="login()">Login</button>
     <button id="getallfiles" onclick="getAllFiles()">Get all files</button>
     <input  id="file-input" type="file" name="Choose file">
     <button id="upload" onclick="uploadFile()">Upload</button>
     <ul id="files">
         <li>Here is where all the files will be</li>
-    </ul>
+    </ul> -->
     <script>
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
