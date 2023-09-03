@@ -6,7 +6,7 @@ body {
     width: 7em;
     background-color: #242038;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
 
@@ -23,19 +23,30 @@ body {
     height: 100%;
     overflow: auto;
 }
-.sidenav li {
+.sidenav li, .sidenav li button {
     padding: 0.5em 0 0.5em 0;
     text-align: center;
     font-size: 1.2em;
-    color: #fff;
     font-family: 'Inter', sans-serif;
     font-weight: bold;
+    text-decoration: none;
 }
-.sidenav li a {
+.sidenav li a, .sidenav li button {
     text-decoration: none;
     color: #CBC0FF;
 }
-.sidenav li a:hover {
+.sidenav li a:hover, .sidenav li button:hover {
     transition: 0.3s;
     color: #fff;
+}
+#uploadfile {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#upload-container {
+    width: 30em;
+    height: 30em;
+    background-color: white;
 }
