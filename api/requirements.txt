@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+python-multipart
+aiofiles
+fastapi-utils
+fastapi-cors
