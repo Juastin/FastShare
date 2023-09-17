@@ -29,11 +29,7 @@ async function checkConnection() {
     console.log(data);
 }
 
-async function login() {
-    const formData = new URLSearchParams();
-    formData.append("username", "Justin");
-    formData.append("password", "James10!");
-
+async function login(formData) {
     const requestOptions = {
         method: "POST",
         headers: {
@@ -50,7 +46,7 @@ async function login() {
         })
         .then(data => {
             access_token = data.access_token;
-            console.log(access_token);
+            return access_token;
         })
         .catch(error => {
             // Handle connection or request error here

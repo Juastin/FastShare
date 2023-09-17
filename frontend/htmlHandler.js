@@ -7,3 +7,19 @@ async function OpenFileUpload() {
         <button id="upload" onclick="uploadFile()">Upload</button>
     </div>`;
 }
+
+function validateForm(){
+    let name = document.forms["myForm"]["name"].value;
+    let password = document.forms["myForm"]["password"].value;
+    if (name == "" || password == "") {
+        alert("Name and password must be filled out");
+        return false;
+    }
+    else {
+        const formData = new URLSearchParams();
+        formData.append("username", name);
+        formData.append("password", password);
+        const access_token = login(formData);
+        console.log(access_token);
+    }
+}
