@@ -46,7 +46,6 @@ async function login(formData) {
         })
         .then(data => {
             access_token = data.access_token;
-            console.log(access_token);
             localStorage.setItem("access_token", access_token);
             return data;
         })
@@ -55,8 +54,6 @@ async function login(formData) {
             console.error("Fetch error:", error);
         });
 }
-
-
 
 async function getAllFiles() { 
     const requestOptions = {
