@@ -48,6 +48,7 @@ async function login(formData) {
             access_token = data.access_token;
             localStorage.setItem("access_token", access_token);
             return data;
+            // console.log(data);
         })
         .catch(error => {
             // Handle connection or request error here

@@ -19,7 +19,7 @@ async function validateForm(){
         const formData = new URLSearchParams();
         formData.append("username", name);
         formData.append("password", password);
-        data = await login(formData);
+        let data = await login(formData);
         console.log(data);
     }
 }
