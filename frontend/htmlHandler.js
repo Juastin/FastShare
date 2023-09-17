@@ -8,7 +8,7 @@ async function OpenFileUpload() {
     </div>`;
 }
 
-function validateForm(){
+async function validateForm(){
     let name = document.forms["myForm"]["name"].value;
     let password = document.forms["myForm"]["password"].value;
     if (name == "" || password == "") {
@@ -19,7 +19,7 @@ function validateForm(){
         const formData = new URLSearchParams();
         formData.append("username", name);
         formData.append("password", password);
-        const access_token = login(formData);
-        console.log(access_token);
+        data = await login(formData);
+        console.log(data);
     }
 }

@@ -46,7 +46,9 @@ async function login(formData) {
         })
         .then(data => {
             access_token = data.access_token;
-            return access_token;
+            console.log(access_token);
+            localStorage.setItem("access_token", access_token);
+            return data;
         })
         .catch(error => {
             // Handle connection or request error here
@@ -54,11 +56,13 @@ async function login(formData) {
         });
 }
 
+
+
 async function getAllFiles() { 
     const requestOptions = {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${access_token}`
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
     fetch(`${url}/files/get_all_files/`, requestOptions)
@@ -85,7 +89,7 @@ async function downloadFile(file_name) {
     const requestOptions = {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${access_token}`
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     }
     fetch(`${url}/files/get_file?filename=${file_name}`, requestOptions).then(response => {
@@ -110,7 +114,7 @@ async function deleteFile(file_name) {
     const requestOptions = {
         method: "DELETE",
         headers: {
-            "Authorization": `Bearer ${access_token}`
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
     fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
@@ -127,13 +131,11 @@ async function uploadFile() {
 
     const formData = new FormData();
     formData.append("in_file", fileInput.files[0]);
-    // console.log(fileInput.files[0])
-
     const requestOptions = {
         method: "POST",
         body: formData,
         headers: {
-            "Authorization": `Bearer ${access_token}`
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
     

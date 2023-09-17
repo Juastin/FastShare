@@ -1,5 +1,6 @@
 body {
     background-color: #64599B;
+    font-family: 'Inter', sans-serif;
 }
 .sidenav {
     height: 100%;
@@ -27,7 +28,6 @@ body {
     padding: 0.5em 0 0.5em 0;
     text-align: center;
     font-size: 1.2em;
-    font-family: 'Inter', sans-serif;
     font-weight: bold;
     text-decoration: none;
 }
@@ -49,4 +49,26 @@ body {
     width: 30em;
     height: 30em;
     background-color: white;
+}
+#login {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    padding: 1em;
+    background: #242038;
+    border-radius: 10px;
+    color: #CBC0FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#login button {
+    margin: 1em 0;
+    background-color: #64599B;
+    padding: 10px 20px;
+    color: #CBC0FF;
+    border-radius: 16px;
+    cursor: pointer;
+    border: none;
 }

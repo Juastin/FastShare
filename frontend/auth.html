@@ -11,11 +11,13 @@
     <script src="htmlHandler.js"></script>
 </head>
 <body>
-    <div id="Login">
-        <form name="myForm" onsubmit="validateForm()" method="post">
-            Name: <input type="text" name="name">
-            Password: <input type="text" name="password" type="password">
-            <input type="submit" value="Submit">
+    <div id="login">
+        <form name="myForm" onsubmit="validateForm();return false" method="post">
+            <p>Name:</p><input type="text" name="name">
+            <p>Password:</p><input type="text" name="password" type="password">
+            <div>
+                <button type="submit" value="Submit">Submit</button>
+            </div>
         </form>
     </div>
     <script>
