@@ -109,14 +109,14 @@ async function deleteFile(file_name) {
             "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
-    let good = fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
+    let ok = fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
     .then(response => {
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
         return true;
     });
-    return good;
+    return ok;
 }
 
 async function uploadFile() { 

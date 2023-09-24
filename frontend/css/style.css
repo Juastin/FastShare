@@ -110,11 +110,15 @@ body {
     display: none;
 }
 #upload {
-    margin: 1em 0;
     background-color: #64599B;
-    padding: 10px 20px;
+}
+#download, #delete, #upload {
+    margin: 1em 0;
+    padding: 1em 2em;
     color: #fff;
-    border-radius: 16px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1em;
     cursor: pointer;
     border: none;
 }
