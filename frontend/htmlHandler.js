@@ -7,6 +7,32 @@ async function OpenFileUpload() {
         <button id="upload" onclick="uploadFile()">Upload</button>
     </div>`;
 }
+async function ShowFiles() {
+    let files = await getAllFiles();
+    console.log(files);
+    let documents = document.getElementById('files');
+    let uploadfile = document.getElementById('uploadfile');
+        
+    while (documents.firstChild)
+        documents.removeChild(documents.firstChild);
+    while (uploadfile.firstChild) {
+        uploadfile.removeChild(uploadfile.firstChild);
+    }
+    files.forEach(file => {
+        documents.innerHTML += 
+        `<li class="file">
+            <h3>${file}</h3>
+            <button onclick="downloadFile('${file}')">Download ${file}</button>
+            <button onclick="deleteFileHandler('${file}')">Delete ${file}</button>
+        </li>`;
+    });
+}
+
+async function deleteFileHandler(filename) {
+    if (await deleteFile(filename) == true) {
+        await ShowFiles();
+    }
+}
 
 async function validateForm(){
     let name = document.forms["myForm"]["name"].value;
@@ -20,6 +46,8 @@ async function validateForm(){
         formData.append("username", name);
         formData.append("password", password);
         let data = await login(formData);
-        console.log(data);
+        if (data != null) {
+            window.location.href = "/";
+        }
     }
 }

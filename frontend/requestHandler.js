@@ -37,7 +37,7 @@ async function login(formData) {
         },
         body: formData
     };
-    fetch(`${url}/token`, requestOptions)
+    let data = await fetch(`${url}/token`, requestOptions)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -47,13 +47,13 @@ async function login(formData) {
         .then(data => {
             access_token = data.access_token;
             localStorage.setItem("access_token", access_token);
-            return data;
-            // console.log(data);
+            return access_token;
         })
         .catch(error => {
             // Handle connection or request error here
             console.error("Fetch error:", error);
         });
+    return data;
 }
 
 async function getAllFiles() { 
@@ -63,7 +63,7 @@ async function getAllFiles() {
             "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
-    fetch(`${url}/files/get_all_files/`, requestOptions)
+    let files = fetch(`${url}/files/get_all_files/`, requestOptions)
     .then(response => {
         if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -71,16 +71,9 @@ async function getAllFiles() {
         return response.json();
     })
     .then(data => {
-        let documents = document.getElementById('files');
-        
-        while (documents.firstChild) {
-            documents.removeChild(documents.firstChild);
-        }
-
-        data.files.forEach(file => {
-            documents.innerHTML += `<li><button onclick="downloadFile('${file}')">Download ${file}</button><button onclick="deleteFile('${file}')">Delete ${file}</button></li>`;
-        });
-    });
+        return data.files;
+    })
+    return files
 }
 
 async function downloadFile(file_name) {
@@ -109,19 +102,21 @@ async function downloadFile(file_name) {
 }
 
 async function deleteFile(file_name) {
+    
     const requestOptions = {
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("access_token")}`
         }
     };
-    fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
+    let good = fetch(`${url}/files/delete_file?filename=${file_name}`, requestOptions)
     .then(response => {
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
-        getAllFiles();
+        return true;
     });
+    return good;
 }
 
 async function uploadFile() { 
@@ -146,6 +141,10 @@ async function uploadFile() {
     })
     .then(data => {
         console.log(data.files);
+    })
+    .catch(error => {
+        // Handle connection or request error here
+        console.error("Fetch error:", error);
     });
 }
 

@@ -72,3 +72,17 @@ body {
     cursor: pointer;
     border: none;
 }
+.file-container ul {
+    margin: 0 1em 0 5em;
+    display: grid;
+    list-style: none;
+    align-items: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1em;
+}
+.file {
+    background-color: #322C4E;
+    padding: 2em;
+    /* margin: 1em 0 0 3em; */
+    color: #fff;
+}

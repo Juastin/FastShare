@@ -14,21 +14,21 @@
     <nav class="sidenav">
         <img src="icons/no-background.png" alt="FastShare logo">
         <ul class="nav-links">
-            <li><a href="./index.html">Files</a></li>
+            <li><a href="#" onclick="ShowFiles()">Files</a></li>
             <li><a href="#" onclick="OpenFileUpload()">Upload File</a></li>
             <li><a href="./compressor.html">Compress videos</a></li>
             <li><a href="./account.html">Account</a></li>
         </div>
+        <script>
+            if (localStorage.getItem("access_token") == null) {
+                window.location.href = "/auth.html";
+            }
+        </script>
     </nav>
     <div id="uploadfile"></div>
-    <!-- <button id="fetchButton" onclick="checkConnection()">Send Request</button>
-    <button id="loginButton" onclick="login()">Login</button>
-    <button id="getallfiles" onclick="getAllFiles()">Get all files</button>
-    <input  id="file-input" type="file" name="Choose file">
-    <button id="upload" onclick="uploadFile()">Upload</button>
-    <ul id="files">
-        <li>Here is where all the files will be</li>
-    </ul> -->
+    <div class="file-container">
+        <ul id="files"></ul>
+    </div>'
     <script>
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
