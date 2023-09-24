@@ -83,6 +83,6 @@ body {
 .file {
     background-color: #322C4E;
     padding: 2em;
-    /* margin: 1em 0 0 3em; */
     color: #fff;
+    border-radius: 10px;
 }

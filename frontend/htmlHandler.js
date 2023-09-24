@@ -1,5 +1,10 @@
 async function OpenFileUpload() {
+    
     let html = document.getElementById('uploadfile');
+    let documents = document.getElementById('files');
+    while (documents.firstChild)
+        documents.removeChild(documents.firstChild);
+
     console.log("OpenFileUpload");
     html.innerHTML = `  
     <div id="upload-container">
