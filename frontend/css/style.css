@@ -67,7 +67,7 @@ body {
     margin: 1em 0;
     background-color: #64599B;
     padding: 10px 20px;
-    color: #CBC0FF;
+    color: #fff;
     border-radius: 16px;
     cursor: pointer;
     border: none;
@@ -80,9 +80,41 @@ body {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1em;
 }
-.file {
+.file, #upload-container  {
     background-color: #322C4E;
     padding: 2em;
     color: #fff;
     border-radius: 10px;
+}
+#upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+#upload-container input {
+    padding: 5em;
+}
+.custom-file-upload {
+    display: flex;
+    border: 1px solid #64599B;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10em;
+    color: #CBC0FF;
+    text-align: center;
+    justify-content: center;
+    
+}
+#file-input[type=file] {
+    display: none;
+}
+#upload {
+    margin: 1em 0;
+    background-color: #64599B;
+    padding: 10px 20px;
+    color: #fff;
+    border-radius: 16px;
+    cursor: pointer;
+    border: none;
 }

@@ -8,7 +8,10 @@ async function OpenFileUpload() {
     console.log("OpenFileUpload");
     html.innerHTML = `  
     <div id="upload-container">
+    <label class="custom-file-upload">
         <input id="file-input" type="file" name="Choose file">
+        Klik hier om een bestand te selecteren.
+    </label>
         <button id="upload" onclick="uploadFile()">Upload</button>
     </div>`;
 }
