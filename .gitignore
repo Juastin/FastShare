@@ -1,6 +1,6 @@
 .env
 *.db
-user_files/*
+backend/user_files/*
 
  # Created by https://www.toptal.com/developers/gitignore/api/python,vs,visualstudiocode,svelte
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,vs,visualstudiocode,svelte
