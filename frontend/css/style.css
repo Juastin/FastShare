@@ -86,6 +86,12 @@ body {
     color: #fff;
     border-radius: 10px;
 }
+.file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 #upload-container {
     display: flex;
     align-items: center;
@@ -110,15 +116,23 @@ body {
     display: none;
 }
 #upload {
+    margin: 1em 0;
+    padding: 1em 2em;
     background-color: #64599B;
 }
 #download, #delete, #upload {
-    margin: 1em 0;
-    padding: 1em 2em;
     color: #fff;
     border-radius: 25px;
     font-weight: bold;
     font-size: 1em;
     cursor: pointer;
     border: none;
+}
+#delete {
+    background-color: #FF6F6F;
+    padding: 0.5em 2.9em;
+}
+#download {
+    background-color: #3986FA;
+    padding: 0.5em 2em;
 }

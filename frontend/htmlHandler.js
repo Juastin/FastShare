@@ -30,8 +30,10 @@ async function ShowFiles() {
         documents.innerHTML += 
         `<li class="file">
             <h3>${file}</h3>
-            <button id="download" onclick="downloadFile('${file}')">Download ${file}</button>
-            <button id="delete" onclick="deleteFileHandler('${file}')">Delete ${file}</button>
+            <div>
+                <button id="delete" onclick="deleteFileHandler('${file}')">Delete</button>
+                <button id="download" onclick="downloadFile('${file}')">Download</button>
+            </div>
         </li>`;
     });
 }
