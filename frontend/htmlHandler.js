@@ -5,9 +5,9 @@ async function OpenFileUpload() {
     while (documents.firstChild)
         documents.removeChild(documents.firstChild);
 
-    console.log("OpenFileUpload");
-    html.innerHTML = `  
+    html.innerHTML = ` 
     <div id="upload-container">
+    <div id="message"></div>
     <label class="custom-file-upload">
         <input id="file-input" type="file" name="Choose file">
         Klik hier om een bestand te selecteren.
@@ -15,6 +15,7 @@ async function OpenFileUpload() {
         <button id="upload" onclick="uploadFile()">Upload</button>
     </div>`;
 }
+
 async function ShowFiles() {
     let files = await getAllFiles();
     console.log(files);

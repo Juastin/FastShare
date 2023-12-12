@@ -157,10 +157,11 @@ async function uploadFile() {
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
+        let html = document.getElementById('message');
+        while (html.firstChild)
+            html.removeChild(html.firstChild);
+        html.innerHTML = `<h3>Upload succesfull!</h3>`;
         return response.json();
-    })
-    .then(data => {
-        console.log(data.files);
     })
     .catch(error => {
         // Handle connection or request error here

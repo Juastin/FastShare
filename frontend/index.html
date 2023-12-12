@@ -25,7 +25,11 @@
             }
         </script>
     </nav>
-    <div id="uploadfile"></div>
+    <div id="uploadfile">
+        <div id="upload-container">
+            <div id="message"></div>
+        </div>
+    </div>
     <div class="file-container">
         <ul id="files"></ul>
     </div>'
@@ -33,7 +37,7 @@
         ShowFiles();
         checkAccessToken();
         setInterval(checkAccessToken, 1000 * 60 * 5);
-        setInterval(ShowFiles, 1000 * 15);
+        // setInterval(ShowFiles, 1000 * 60);
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
                 .then(function() {

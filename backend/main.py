@@ -15,7 +15,8 @@ app = FastAPI()
 db = Database()
 
 origins = [
-    "http://localhost:3000",  # Add other allowed origins if needed
+    "http://localhost:3000/#",  # Add other allowed origins if needed
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
