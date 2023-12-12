@@ -40,7 +40,7 @@ class User(BaseModel):
     password: str | None = None
 
 class UserInDB(User):
-    hashed_password: str
+    hashed_password: str | None = None
     date_of_registration: str
     amount_of_space: int
 
@@ -74,6 +74,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
     except JWTError:
         raise credentials_exception
     user = get_user_by_username(db, username=token_data.username)
+    user.hashed_password = None
     if user is None:
         raise credentials_exception
     return user
@@ -91,6 +92,7 @@ def authenticate_user(db, username=str, password=str) -> UserInDB:
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    user.hashed_password = None
     return user
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -143,6 +145,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/users/get_user/")
+async def get_user(user: User = Depends(get_current_user)):
+    return {"user": user}
 
 @app.post("/users/create/")
 async def register_user(register_token: str, user: User):

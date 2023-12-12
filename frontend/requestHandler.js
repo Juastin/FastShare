@@ -29,6 +29,26 @@ async function checkConnection() {
     console.log(data);
 }
 
+async function checkAccessToken(){
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+        }
+    };
+    fetch(`${url}/users/get_user`, requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                window.location.href = '/auth';
+            }
+            return response.json();
+        })
+        .catch(error => {
+            // Handle connection or request error here
+            console.error("Fetch error:", error);
+        });
+}
+
 async function login(formData) {
     const requestOptions = {
         method: "POST",
