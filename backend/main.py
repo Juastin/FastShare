@@ -42,8 +42,8 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str | None = None
-    date_of_registration: str
-    amount_of_space: int
+    date_of_registration: str   
+    amount_of_space: float
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
