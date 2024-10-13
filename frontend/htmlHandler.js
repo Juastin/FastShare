@@ -8,12 +8,28 @@ async function OpenFileUpload() {
     html.innerHTML = ` 
     <div id="upload-container">
     <div id="message"></div>
+    <div id="selected-files"></div>
     <label class="custom-file-upload">
-        <input id="file-input" type="file" name="Choose file">
-        Klik hier om een bestand te selecteren.
+        <input id="file-input" type="file" multiple="multiple" name="choosefile">
+        <div id="no-selected-files">
+            Klik hier om een bestand te selecteren.
+        </div>
     </label>
         <button id="upload" onclick="uploadFile()">Upload</button>
-    </div>`;
+    </div>
+    `;
+    // TODO: Print filenames when selecting multiplefiles
+
+    // document.getElementById('file-input').addEventListener('change', function() {
+        // const files = this.files;
+        // const selectedFilesContainer = document.getElementById('selected-files');
+        // selectedFilesContainer.innerHTML = ''; // Clear previous selections
+
+        // if (files.length > 0) {
+        //     const fileNames = Array.from(files).map(file => file.name).join(', ');
+        //     selectedFilesContainer.innerHTML = `<h4 class="selected-file">Geselecteerde bestand: ${fileNames}</h4>`;
+        // }
+    // });
 }
 
 async function ShowFiles() {

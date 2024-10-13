@@ -10,8 +10,8 @@ body {
     z-index: 2;
     top: 0;
     left: 0;
-
 }
+    
 .sidenav img {
     width: 7em;
     height: auto;
@@ -46,6 +46,7 @@ body {
     justify-content: center;
 }
 #upload-container {
+    margin: 2em;
     width: 30em;
     height: 30em;
     background-color: white;
@@ -82,7 +83,7 @@ body {
 }
 .file, #upload-container  {
     background-color: #322C4E;
-    padding: 2em;
+    padding: 0.8em;
     color: #fff;
     border-radius: 10px;
 }
@@ -134,5 +135,66 @@ body {
 }
 #download {
     background-color: #3986FA;
-    padding: 0.5em 2em;
+    padding: 0.5em 2.0em;
+}
+
+#download:hover, #delete:hover, #upload:hover {
+    transition: 0.3;
+    background-color: #242038
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    color:#453e6b !important
+}
+
+.selected-file {
+    text-overflow: ellipsis;
+    width: calc(80%);
+}
+
+@media (min-width: 770px){
+    .dropdown-toggle {
+        display: none;
+    }
+}
+
+@media (max-width: 769px) {
+    .file-container ul {
+        grid-template-columns: 1fr; /* One column layout on mobile */
+        margin: 0; /* Adjust margin for better alignment */
+        padding : 0;
+    }
+    
+    #upload-container {
+        width: 90%; /* Adapt width to fit mobile screen */
+        height: auto;
+    }
+    
+    .sidenav li {
+        padding: 0.5em;
+        font-size: 1em;
+    }
+    .sidenav {
+        flex-direction: column;
+        left: -7em; /* Initially hidden */
+        transition: left 0.2s ease; /* Smooth slide-in transition */
+    }
+    .sidenav.show {
+        left: 0; /* Fully visible */
+    }
+    .dropdown-toggle {
+        display: block; /* Show toggle button on mobile */
+        margin: 1em;
+        width: 10%;
+        height: auto;
+    }
+    .cross {
+        width: 3em !important;
+        height: auto;
+    }
+    #upload-container {
+        width: 70%;
+    }
 }

@@ -141,7 +141,7 @@ async function deleteFile(file_name) {
 
 async function uploadFile() { 
     const fileInput = document.querySelector('#file-input') ;
-
+    
     const formData = new FormData();
     formData.append("in_file", fileInput.files[0]);
     const requestOptions = {

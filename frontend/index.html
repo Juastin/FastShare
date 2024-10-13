@@ -11,13 +11,18 @@
     <script src="htmlHandler.js"></script>
 </head>
 <body>
+    <div>
+    <img src="hamburger.webp" class="dropdown-toggle" onclick="toggleDropdown()"/>
+</div>
     <nav class="sidenav">
+        <img src="cross.png" class="dropdown-toggle cross" onclick="toggleDropdown()"/>
         <img src="icons/no-background.png" alt="FastShare logo">
         <ul class="nav-links">
             <li><a href="#" onclick="ShowFiles()">Files</a></li>
             <li><a href="#" onclick="OpenFileUpload()">Upload File</a></li>
-            <li><a href="./compressor.html">Compress videos</a></li>
-            <li><a href="./account.html">Account</a></li>
+            <li><a class="disabled" href="/">Compress videos</a></li>
+            <li><a class="disabled" href="/">Account</a></li>
+        </ul>
         </div>
         <script>
             if (localStorage.getItem("access_token") == null) {
@@ -32,12 +37,22 @@
     </div>
     <div class="file-container">
         <ul id="files"></ul>
-    </div>'
+    </div>
     <script>
+        function toggleDropdown() {
+        const sidenav = document.querySelector('.sidenav');
+        sidenav.classList.toggle('show');
+
+        const navLinks = document.querySelectorAll('.nav-links li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidenav.classList.remove('show');
+            });
+        });
+    }
         ShowFiles();
         checkAccessToken();
         setInterval(checkAccessToken, 1000 * 60 * 5);
-        // setInterval(ShowFiles, 1000 * 60);
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
                 .then(function() {
