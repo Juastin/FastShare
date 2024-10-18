@@ -76,6 +76,26 @@ async function login(formData) {
     return data;
 }
 
+async function register(formData) {
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+    };
+    let data = await fetch(`${url}/users/create/`, requestOptions)
+        .then(async response => {
+            return response.json();
+        })
+        .catch(error => {
+            // Handle connection or request error here
+            alert(error);
+            throw new Error(error);
+        });
+    return data;
+}
+
 async function getAllFiles() { 
     const requestOptions = {
         method: "GET",

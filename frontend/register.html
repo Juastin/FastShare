@@ -12,9 +12,11 @@
 </head>
 <body>
     <div id="login">
-        <form name="loginForm" onsubmit="validateLoginForm();return false" method="post">
+        <form name="regForm" onsubmit="validateRegisterForm();return false" method="post">
             <p>Name:</p><input type="text" name="name">
             <p>Password:</p><input type="password" name="password">
+            <p>Confirm password:</p><input type="password" name="confirm-password">
+            <p>Secret key:</p><input type="password" name="secret">
             <div>
                 <button type="submit" value="Submit">Submit</button>
             </div>

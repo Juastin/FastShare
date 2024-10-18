@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 import aiofiles
-from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, status, Form, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -39,6 +39,12 @@ class TokenData(BaseModel):
 class User(BaseModel):
     username: str
     password: str | None = None
+
+
+class Register(BaseModel):
+    username: str
+    password: str
+    register_token: str
 
 class UserInDB(User):
     hashed_password: str | None = None
@@ -152,13 +158,13 @@ async def get_user(user: User = Depends(get_current_user)):
     return {"user": user}
 
 @app.post("/users/create/")
-async def register_user(register_token: str, user: User):
+async def register_user(username: str = Form(...), password: str = Form(...), register_token: str = Form(...)):
     if (register_token.lower() != os.getenv("REGISTER_TOKEN")):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Register token incorrect")
-    hashpw = get_password_hash(user.password)
-    validate_password(user.password)
-    db.create_user(username=user.username, password=hashpw)
-    return {"Account created with username": user.username}
+    hashpw = get_password_hash(password)
+    validate_password(password)
+    db.create_user(username=username, password=hashpw)
+    return {"Account created with username": username}
 
 @app.get("/files/get_all_files/")
 async def get_all_files_of_user(_: User = Depends(get_current_user)):

@@ -61,9 +61,9 @@ async function deleteFileHandler(filename) {
     }
 }
 
-async function validateForm(){
-    let name = document.forms["myForm"]["name"].value;
-    let password = document.forms["myForm"]["password"].value;
+async function validateLoginForm(){
+    let name = document.forms["loginForm"]["name"].value;
+    let password = document.forms["loginForm"]["password"].value;
     if (name == "" || password == "") {
         alert("Name and password must be filled out");
         return false;
@@ -75,6 +75,33 @@ async function validateForm(){
         let data = await login(formData);
         if (data != null) {
             window.location.href = "/";
+        }
+    }
+}
+async function validateRegisterForm(){
+    let name = document.forms["regForm"]["name"].value;
+    let password = document.forms["regForm"]["password"].value;
+    let confirmpass = document.forms["regForm"]["confirm-password"].value;
+    let secret = document.forms["regForm"]["secret"].value;
+
+    if (password !== confirmpass){
+        alert("Passwords are not the same")
+    }
+    else if (name == "" || password == "" || secret == ""){
+        alert("Values cannot be empty.")
+    }
+    else {
+        const formData = new URLSearchParams();
+        formData.append("username", name);
+        formData.append("password", password);
+        formData.append("register_token", secret);
+        console.log(formData);
+        let data = await register(formData);
+        if (data.detail == null) {
+                window.location.href = "/auth";
+        }
+        else {
+            alert(data.detail)
         }
     }
 }
