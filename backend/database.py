@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 class Database():
     def __init__(self):
         self.init_env()
+        self.createdb()
 
     def init_env(self):
         load_dotenv(os.path.abspath(".env"))
@@ -20,7 +21,20 @@ class Database():
             self.con = sqlite3.connect("FastShare.db")
             self.cur = self.con.cursor()
         except Exception:
-            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, "Cannot connect to database, try again later or contact the developer") 
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, "Cannot connect to database, try again later or contact the developer")
+        
+    def createdb(self) -> bool:
+        self.connect()
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS user (
+            username TEXT,
+            password TEXT,
+            date_of_registration TEXT,
+            amount_of_space INT
+        );
+        """)
+        self.con.commit()
+        return True
 
     def check_user_exists(self, username=str) -> bool:
         self.connect()
